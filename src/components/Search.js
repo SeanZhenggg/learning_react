@@ -3,8 +3,19 @@ import axios from 'axios'
 
 const Search = () => {
   const [term, setTerm] = useState('programming')
+  const [debounceTerm, setDebounceTerm] = useState('programming')
   const [results, setResults] = useState([])
 
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setDebounceTerm(term)
+    }, 1000)
+
+    return () => {
+      clearTimeout(timerId)
+    }
+  }, [term])
 
   useEffect(() => {
     const search = async() => {
@@ -14,26 +25,15 @@ const Search = () => {
           list: 'search',
           origin: '*',
           format: 'json',
-          srsearch: term
+          srsearch: debounceTerm
         }
       })
       setResults(data.query.search)
     }
 
-    if(term && !results.length) {
-      search()
-    } else {
-      const timerId = setTimeout(() => {
-        if (term) {
-          search()
-        }
-      }, 1000)
+    search()
 
-      return () => {
-        clearTimeout(timerId)
-      }
-    }
-  }, [results.length, term])
+  }, [debounceTerm])
 
   const renderedResults = results.map((result) => {
     return (
@@ -52,6 +52,7 @@ const Search = () => {
       </div>
     )
   })
+
   return (
     <div>
       <div className="ui form">
