@@ -1,5 +1,5 @@
 import React from 'react'
-import Translate from './components/Translate'
+import Translate from './Translate'
 // import Accordion from './components/Accordion'
 // import Search from './components/Search'
 
